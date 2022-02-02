@@ -1,16 +1,24 @@
-import React from 'react'
+// libraries
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CardMedia from '@mui/material/CardMedia'
 import Typography from '@mui/material/Typography'
+// components
 import Verified from 'src/components/shared/Verified'
-import { StyledLink } from 'src/components/containers'
+import { StyledLink } from 'src/components/shared/containers'
+// constants
+import { IBaseShow } from 'src/constants/interfaces'
 
-const Show = ({ show, dataTestId = '' }) => {
+type ShowProps = {
+    show: IBaseShow
+    dataTestId?: string
+}
+
+const Show = ({ show, dataTestId }: ShowProps) => {
     const { title, image, id, verified } = show || {}
 
     return (
-        <StyledLink to={`/shows/${id}`}>
+        <StyledLink href={`/shows/${id}`}>
             <Card
                 sx={{
                     maxHeight: 300,

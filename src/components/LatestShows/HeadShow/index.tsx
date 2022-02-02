@@ -1,46 +1,56 @@
-import React from 'react'
-import { useTranslation } from 'react-i18next'
-import styled from 'styled-components'
-import { useNavigate } from 'react-router-dom'
+// libraries
+import { useTranslation } from 'next-i18next'
+import { styled } from '@mui/system'
+import { useRouter } from 'next/router'
 import { useSelector, useDispatch } from 'react-redux'
 import PlayCircleOutlinedIcon from '@mui/icons-material/PlayCircleOutlined'
 import PauseCircleOutlineOutlinedIcon from '@mui/icons-material/PauseCircleOutlineOutlined'
-import Button from '../../shared/Button'
-import Verified from '../../shared/Verified'
-import HeaderBackground from '../../shared/HeaderBackground'
-import { ImageWrapper } from '../../../styles/containers'
-import { setPlayerInfo, setIsPlaying } from '../../../store/slices/playerSlice'
+import Image from 'next/image'
+// components
+import Button from 'src/components/shared/Button'
+import Verified from 'src/components/shared/Verified'
+import HeaderBackground from 'src/components/shared/HeaderBackground'
+import { ImageWrapper } from 'src/components/shared/containers'
+// constants
+import { IPopularShow } from 'src/constants/interfaces'
+// store
+import { setPlayerInfo, setIsPlaying } from 'store/slices/playerSlice'
+import { RootState } from 'store'
 
-const Wrapper = styled.div`
-    height: 250px;
-    position: relative;
-    background-position: center;
-    background-size: auto;
+const Wrapper = styled('div')({
+    height: 250,
+    position: 'relative',
+    backgroundPosition: 'center',
+    backgroundSize: 'auto',
 
-    .content-container {
-        display: flex;
-        justify-content: 'space-between';
-        position: absolute;
-        bottom: 30px;
-        left: 20px;
+    '.content-container': {
+        display: 'flex',
+        justifyContent: 'space-between',
+        position: 'absolute',
+        bottom: 30,
+        left: 20
+    },
+
+    '.header': {
+        display: 'flex',
+        alignItems: 'center'
     }
+})
 
-    .header {
-        display: flex;
-        align-items: center;
-    }
-`
+type HeadShowProps = {
+    showData: IPopularShow
+}
 
-const HeadShow = ({ showData }) => {
+const HeadShow = ({ showData }: HeadShowProps) => {
     const { t } = useTranslation(['latestShows'])
     const dispatch = useDispatch()
-    const navigate = useNavigate()
-    const { isPlaying, id } = useSelector(({ player }) => player)
+    const router = useRouter()
+    const { isPlaying, id } = useSelector(({ player }: RootState) => player)
 
     const { id: showId, verified, title, image, mainImage, source } = showData || {}
 
     const redirectToShow = () => {
-        navigate(`/shows/${showId}`)
+        router.push(`/shows/${showId}`)
     }
 
     const togglePlayPause = () => {
@@ -52,11 +62,11 @@ const HeadShow = ({ showData }) => {
             title
         }
 
-        if (!id || id !== showId) {
+        if (!id) {
             dispatch(setPlayerInfo(params))
         }
 
-        if (id && id === showId) {
+        if (id) {
             dispatch(setIsPlaying(!isPlaying))
         }
     }
@@ -67,7 +77,13 @@ const HeadShow = ({ showData }) => {
             <div className="info">
                 <div className="content-container">
                     <ImageWrapper height={120} width={120}>
-                        <img data-testid="head-show-image" height="120" width="120" src={image} alt="Podcast poster" />
+                        <Image
+                            data-testid="head-show-image"
+                            height="120"
+                            width="120"
+                            src={image}
+                            alt="Podcast poster"
+                        />
                     </ImageWrapper>
 
                     <div>
