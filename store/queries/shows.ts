@@ -1,13 +1,22 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { ISingleShow, IPopularShow, ILibraryShow } from 'src/constants/interfaces'
+
+interface ILatestShow {
+    search: string
+}
+
+interface IShow extends ILatestShow {
+    id: string
+}
 
 // Define a service using a base URL and expected endpoints
 export const showsApi = createApi({
     reducerPath: 'shows',
     refetchOnReconnect: true,
     tagTypes: ['Shows'],
-    baseQuery: fetchBaseQuery({ baseUrl: process.env.REACT_APP_SHOWS_BACKEND_URL }),
+    baseQuery: fetchBaseQuery({ baseUrl: process.env.NEXT_PUBLIC_SHOWS_BACKEND_URL }),
     endpoints: (builder) => ({
-        getShows: builder.query({
+        getShows: builder.query<IPopularShow[], ILatestShow>({
             query: (args) => {
                 const { search } = args
                 return {
@@ -15,16 +24,16 @@ export const showsApi = createApi({
                     params: { search }
                 }
             },
-            providedTags: ['Shows'], // helps to refetch data if shows were changed by mutation (currently not useful here)
-            transformResponse: (response, meta, arg) => {
+            // providedTags: ['Shows'], // helps to refetch data if shows were changed by mutation (currently not useful here)
+            transformResponse: (response: IPopularShow[], meta, arg) => {
                 return response
             }
         }),
-        getPopularShows: builder.query({
+        getPopularShows: builder.query<IPopularShow[], void>({
             query: () => ({ url: `shows/popular` }),
-            transformResponse: (response, meta, arg) => response
+            transformResponse: (response: IPopularShow[], meta, arg) => response
         }),
-        getLibrary: builder.query({
+        getLibrary: builder.query<ILibraryShow[], { category: String }>({
             query: (args) => {
                 const { category } = args
                 return {
@@ -32,11 +41,11 @@ export const showsApi = createApi({
                     params: { category }
                 }
             },
-            transformResponse: (response, meta, arg) => {
+            transformResponse: (response: ILibraryShow[], meta, arg) => {
                 return response
             }
         }),
-        getShowsById: builder.query({
+        getShowsById: builder.query<ISingleShow, IShow>({
             query: (args) => {
                 const { id, search } = args || {}
 
@@ -45,7 +54,7 @@ export const showsApi = createApi({
                     params: { search }
                 }
             },
-            transformResponse: (response, meta, arg) => response
+            transformResponse: (response: ISingleShow, meta, arg) => response
         })
     })
 })

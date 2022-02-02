@@ -1,0 +1,13 @@
+{
+  "columns": {
+    "firstColumn": "",
+    "secondColumn": "Title",
+    "thirdColumn": "Publish Date"
+  },
+  "tabs": {
+    "firstTab": "Latest Unplayed",
+    "secondTab": "All",
+    "thirdTab": "Purchased",
+    "fourthTab": "Downloaded"
+  }
+}

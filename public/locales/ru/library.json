@@ -1,0 +1,13 @@
+{
+  "columns": {
+    "firstColumn": "",
+    "secondColumn": "Заголовок",
+    "thirdColumn": "Дата Публикации"
+  },
+  "tabs": {
+    "firstTab": "Последние Несыгранные",
+    "secondTab": "Все",
+    "thirdTab": "Куплено",
+    "fourthTab": "Загружено"
+  }
+}

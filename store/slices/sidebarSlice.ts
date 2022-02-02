@@ -1,6 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-const initialState = {
+type SideBarProps = {
+    isMobileSidebarActive: Boolean
+}
+
+const initialState: SideBarProps = {
     isMobileSidebarActive: false
 }
 
