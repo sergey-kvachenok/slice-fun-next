@@ -1,3 +1,4 @@
+//libraries
 import { useState } from 'react'
 import { styled } from '@mui/system'
 import { useDispatch, useSelector } from 'react-redux'
@@ -5,7 +6,12 @@ import dayjs from 'dayjs'
 import { useTranslation } from 'next-i18next'
 import PlayCircleOutlinedIcon from '@mui/icons-material/PlayCircleOutlined'
 import PauseCircleOutlineOutlinedIcon from '@mui/icons-material/PauseCircleOutlineOutlined'
+// components
 import Button from 'src/components/shared/Button'
+// constants
+import { ILatestShow } from 'src/constants/interfaces'
+// store
+import { RootState } from 'store'
 import { setPlayerInfo, setIsPlaying } from 'store/slices/playerSlice'
 
 const Wrapper = styled('div')({
@@ -44,12 +50,17 @@ const Wrapper = styled('div')({
     }
 })
 
-const Episode = ({ episode, dataTestId = '' }) => {
+type EpisodeProps = {
+    episode: ILatestShow
+    dataTestId?: string
+}
+
+const Episode = ({ episode, dataTestId }: EpisodeProps) => {
     const { t } = useTranslation(['common'])
     const dispatch = useDispatch()
-    const { isPlaying, id } = useSelector(({ player }) => player)
+    const { isPlaying, id } = useSelector(({ player }: RootState) => player)
 
-    const [currentEpisodeId, setCurrentEpisodeId] = useState(null)
+    const [currentEpisodeId, setCurrentEpisodeId] = useState<string | null>(null)
     const [isExpanded, setExpanded] = useState(false)
 
     const { id: episodeId, date, title, description, extendedDescription, source, image } = episode || {}
@@ -60,7 +71,7 @@ const Episode = ({ episode, dataTestId = '' }) => {
         setExpanded((prevValue) => !prevValue)
     }
 
-    const toglePlayPause = (id) => {
+    const toglePlayPause = (id: string) => {
         const params = {
             id: episodeId,
             isPlaying: !isPlaying,
@@ -89,12 +100,10 @@ const Episode = ({ episode, dataTestId = '' }) => {
     const descriptionClass = isExpanded ? 'expanded-description' : 'collapsed-description'
 
     return (
-        <Wrapper>
-            <div data-testid="date" className="date secondary-text">
-                {dayjs(new Date(date)).format('MMM D, YYYY')}
-            </div>
+        <Wrapper data-testid={dataTestId}>
+            <div className="date secondary-text">{dayjs(new Date(date)).format('MMM D, YYYY')}</div>
 
-            <div data-testid={dataTestId} className="info">
+            <div className="info">
                 <div className="header">
                     {isCurrentEpisode && isPlaying ? (
                         <PauseCircleOutlineOutlinedIcon

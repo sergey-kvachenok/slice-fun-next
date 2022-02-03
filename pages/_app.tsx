@@ -1,6 +1,7 @@
 // libraries
 import type { AppProps } from 'next/app'
 import { Provider } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { appWithTranslation } from 'next-i18next'
 import { CacheProvider } from '@emotion/react'
 import { ThemeProvider } from '@mui/material/styles'
@@ -9,18 +10,23 @@ import Grid from '@mui/material/Grid'
 import SideBarContainer from 'src/components/SideBar/SideBarContainer'
 import SideBarBurgerButton from 'src/components/shared/SideBarBurgerButton'
 import GlobalStyles from 'styles/global'
+import AudioPlayer from 'src/components/AudioPlayer'
 // utils
 import createEmotionCache from 'src/utils/createEmotionCache'
 import theme from 'src/utils/theme'
 // store
-import { store } from 'store'
-import '../styles/globals.css'
+import { store, RootState } from 'store'
+// styles
+import 'styles/globals.css'
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache()
 
 function MyApp(props: AppProps & { emotionCache: any }) {
     const { Component, emotionCache = clientSideEmotionCache, pageProps } = props
+
+    const { id } = store.getState().player
+    //  useSelector(({ player }: RootState) => player)
 
     return (
         <CacheProvider value={emotionCache}>
@@ -35,6 +41,7 @@ function MyApp(props: AppProps & { emotionCache: any }) {
 
                         <Grid item sx={{ padding: 0 }} xs={12} sm={8} md={9} lg={10}>
                             <Component {...pageProps} />
+                            {id && <AudioPlayer />}
                         </Grid>
                     </Grid>
                 </Provider>

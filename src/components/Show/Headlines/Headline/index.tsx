@@ -1,5 +1,10 @@
+//libraries
 import { styled } from '@mui/system'
 import ShareIcon from '@mui/icons-material/Share'
+import Image from 'next/image'
+// constants
+import { HeadlineType } from 'src/constants/types'
+// utils
 import { colors } from 'src/utils/theme'
 
 const Wrapper = styled('div')({
@@ -36,7 +41,11 @@ const Wrapper = styled('div')({
     }
 })
 
-const Headline = ({ headline }) => {
+type HeadlineProps = {
+    headline: HeadlineType
+}
+
+const Headline = ({ headline }: HeadlineProps) => {
     const { image, title, description } = headline || {}
 
     const handleShareClick = () => {
@@ -45,8 +54,8 @@ const Headline = ({ headline }) => {
 
     return (
         <Wrapper>
-            <div className="poster">
-                <img data-testid="poster-image" width="70" height="70" src={image} alt="Headline" />
+            <div data-testid="headline" className="poster">
+                <Image data-testid="head-show-image" width="70" height="70" src={image} alt="Headline" />
             </div>
 
             <div className="info">
@@ -62,7 +71,7 @@ const Headline = ({ headline }) => {
                 sx={{ ml: 2, cursor: 'pointer' }}
             />
 
-            <div data-testid="banner" className="banner">
+            <div className="banner" data-testid="banner">
                 Banner text
             </div>
         </Wrapper>

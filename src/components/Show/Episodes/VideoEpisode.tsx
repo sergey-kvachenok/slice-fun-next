@@ -1,6 +1,12 @@
+// libraries
+import Image from 'next/image'
 import { styled } from '@mui/system'
 import dayjs from 'dayjs'
 import PlayCircleOutlinedIcon from '@mui/icons-material/PlayCircleOutlined'
+// constants
+import { IVideo } from 'src/constants/interfaces'
+
+// utils
 import { colors } from 'src/utils/theme'
 
 const Wrapper = styled('div')({
@@ -34,7 +40,11 @@ const Wrapper = styled('div')({
     }
 })
 
-const VideoEpisode = ({ episode }) => {
+type VideoEpisodeProps = {
+    episode: IVideo
+}
+
+const VideoEpisode = ({ episode }: VideoEpisodeProps) => {
     const { date, title, description, image } = episode || {}
 
     const hadlePlayClick = () => {
@@ -44,7 +54,7 @@ const VideoEpisode = ({ episode }) => {
     return (
         <Wrapper>
             <div className="poster">
-                <img width="70" height="70" src={image} alt="Headline" />
+                <Image width="70" height="70" src={image} alt="Headline" />
             </div>
 
             <div>

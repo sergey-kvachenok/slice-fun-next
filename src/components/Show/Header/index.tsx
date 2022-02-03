@@ -1,9 +1,12 @@
+// libraries
 import { styled } from '@mui/system'
 import { useTranslation } from 'next-i18next'
-import Button from '../../shared/Button'
-import Search from '../../shared/Search'
-import HeaderBackground from '../../shared/HeaderBackground'
-import Info from './Info'
+// components
+import Button from 'src/components/shared/Button'
+import Search from 'src/components/shared/Search'
+import HeaderBackground from 'src/components/shared/HeaderBackground'
+import Info from 'src/components/Show/Header/Info'
+// utils
 import { breakpoints } from 'src/utils/theme'
 
 const Wrapper = styled('div')({
@@ -13,7 +16,7 @@ const Wrapper = styled('div')({
     backgroundSize: 'auto',
 
     '.content-container': {
-        position: absolute,
+        position: 'absolute',
         bottom: -20,
 
         [`@media (max-width: ${breakpoints.xs})`]: {
@@ -29,7 +32,14 @@ const Panel = styled('div')({
     justifyContent: 'space-between'
 })
 
-const Header = ({ mainImage, title, verified, handleSearchChange }) => {
+type HeaderProps = {
+    mainImage: string
+    title: string
+    verified: boolean
+    handleSearchChange: Function
+}
+
+const Header = ({ mainImage, title, verified, handleSearchChange }: HeaderProps) => {
     const { t } = useTranslation(['common'])
 
     return (
@@ -40,8 +50,14 @@ const Header = ({ mainImage, title, verified, handleSearchChange }) => {
                 <Search handleSearchChange={handleSearchChange} />
 
                 <div className="buttons">
-                    <Button variant="outlined" title={t('manageSubscriptions')} customStyles={{ mr: 2 }} />
-                    <Button variant="outlined" title={t('share')} />
+                    <Button
+                        variant="outlined"
+                        title={t('manageSubscriptions')}
+                        customStyles={{ mr: 2 }}
+                        onClick={() => {}}
+                    />
+
+                    <Button variant="outlined" title={t('share')} onClick={() => {}} />
                 </div>
             </Panel>
 

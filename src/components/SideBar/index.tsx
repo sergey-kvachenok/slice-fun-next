@@ -27,11 +27,11 @@ const styles = {
 
 const SideBar = () => {
     const router = useRouter()
-    const { pathname } = router || {}
+    const { asPath, pathname } = router || {}
     const { t } = useTranslation(['sideBar'])
 
     const changeLanguage = (language: string) => {
-        router.push(pathname, pathname, { locale: language })
+        router.push(asPath, asPath, { locale: language })
     }
 
     return (

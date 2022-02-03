@@ -1,17 +1,21 @@
+// libraries
 import { useTranslation } from 'next-i18next'
 import { styled } from '@mui/system'
-import CustomTabs from '../../shared/Tabs'
-import Episode from './Episode'
-import VideoEpisode from './VideoEpisode'
-import Button from '../../shared/Button'
-import { ListWrapper } from '../../../styles/containers'
+// components
+import CustomTabs from 'src/components/shared/Tabs'
+import Episode from 'src/components/Show/Episodes/Episode'
+import VideoEpisode from 'src/components/Show/Episodes/VideoEpisode'
+import Button from 'src/components/shared/Button'
+import { ListWrapper } from 'src/components/shared/containers'
+// constants
+import { ILatestShow, IVideo } from 'src/constants/interfaces'
 
 const ButtonContainer = styled('div')({
     display: 'flex',
     justifyContent: 'center'
 })
 
-const getTabs = (t) => [
+const getTabs = (t: Function) => [
     {
         label: t('tabs:firstTab'),
         clickHandler: () => {
@@ -44,7 +48,13 @@ const getTabs = (t) => [
     }
 ]
 
-const Episodes = ({ latestEpisodes = [], premiumEpisodes = [], video = [] }) => {
+type EpisodesProps = {
+    latestEpisodes: ILatestShow[]
+    premiumEpisodes: ILatestShow[]
+    video: IVideo[]
+}
+
+const Episodes = ({ latestEpisodes = [], premiumEpisodes = [], video = [] }: EpisodesProps) => {
     const { t } = useTranslation(['episodes', 'common', 'tabs'])
 
     const handleLoadMoreClick = () => {
