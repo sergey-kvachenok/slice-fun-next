@@ -4,7 +4,7 @@ import { breakpoints, colors } from 'src/utils/theme'
 const styles = css`
     body {
         color: ${colors.darkBlue1};
-        max-width: 1200px;
+        max-width: 1440px;
         margin: 0 auto;
     }
     .xs-hidden {
@@ -64,6 +64,20 @@ const styles = css`
                 color: ${colors.pink};
             }
         }
+    }
+
+    // new
+    .button-default {
+        outline: none;
+        border: none;
+    }
+
+    .margin-right {
+        margin-right: 16px;
+    }
+
+    .margin-left {
+        margin-left: 16px;
     }
 `
 

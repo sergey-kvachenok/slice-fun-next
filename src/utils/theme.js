@@ -10,7 +10,10 @@ const convertColorToMUI = (colors = []) => {
 }
 
 export const colors = {
-    pink: '#ff405b',
+    pink: '#fc107e',
+    white: '#fff',
+    grey: '#616161',
+
     yellow: '#ffd200',
     lightPeach: '#ffe3d4',
     coralRed: '#f7484b',

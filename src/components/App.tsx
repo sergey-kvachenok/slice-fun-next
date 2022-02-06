@@ -36,17 +36,19 @@ function MyApp(props: AppProps) {
     // console.log('id', player)
 
     return (
-        <Grid container direction="row" justifyContent="center">
-            <Grid item xs={12} sm={4} md={3} lg={2}>
-                <SideBarContainer />
-                <SideBarBurgerButton />
-            </Grid>
+        <>
+            <Grid container direction="row" justifyContent="center">
+                <Grid item xs={12} sm={4} md={3} lg={2}>
+                    <SideBarContainer />
+                    <SideBarBurgerButton />
+                </Grid>
 
-            <Grid item sx={{ padding: 0 }} xs={12} sm={8} md={9} lg={10}>
-                <Component {...pageProps} />
-                {id && <AudioPlayer />}
+                <Grid item sx={{ padding: 0 }} xs={12} sm={8} md={9} lg={10}>
+                    <Component {...pageProps} />
+                </Grid>
             </Grid>
-        </Grid>
+            <AudioPlayer />
+        </>
     )
 }
 
