@@ -1,167 +1,124 @@
+// libraries
 import ReactPlayer from 'react-player'
-import Image from 'next/image'
-import classnames from 'classnames'
-import { makeStyles } from '@mui/styles'
-import FifteenBack from 'src/assets/svg/fifteen-back.svg'
-import FifteenForward from 'src/assets/svg/fifteen-forward.svg'
-import PauseIcon from 'src/assets/svg/pause.svg'
-import VolumeDownIcon from 'src/assets/svg/volume-down.svg'
-import VolumeUpIcon from 'src/assets/svg/volume-up.svg'
-import { colors } from 'src/utils/theme'
-import Slider from 'src/components/shared/Slider'
+import { useState, useRef } from 'react'
+// components
+import PlayerControls from 'src/components/AudioPlayer/PlayerControls'
 
-const useStyles = makeStyles({
-    'player-wrapper': {
-        maxWidth: 1440,
-        width: '100%',
-        height: 70,
-        color: colors.white
-    },
+const defaultTime = 15
 
-    'controls-wrapper': {
-        padding: '6px 8px',
-        display: 'flex',
-        boxSizing: 'border-box',
-        backgroundColor: '#000000'
-    },
-
-    'info-wrapper': {
-        alignItems: 'center',
-        marginRight: 12,
-        fontSize: 12,
-        display: 'flex',
-        maxWidth: 266,
-        width: '100%',
-
-        '& .image-wrapper': {
-            marginRight: 12,
-            position: 'relative'
-        },
-
-        '& .description': {
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            maxWidth: 181
-        }
-    },
-
-    controls: {
-        width: '100%',
-        maxWidth: 1158,
-        alignItems: 'center',
-        display: 'flex',
-
-        '& .control-buttons-wrapper': {
-            display: 'flex',
-            alignItems: 'center'
-        },
-
-        '& .play-pause': {
-            backgroundColor: colors.pink,
-            borderRadius: '50%',
-            display: 'flex',
-            width: 48,
-            height: 48,
-            marginLeft: 16,
-            marginRight: 16
-        },
-
-        '& .play-pause-icon': {
-            margin: 'auto'
-        }
-    },
-
-    'duration-wrapper': {
-        display: 'flex',
-        marginLeft: 35,
-        alignItems: 'center',
-        maxWidth: 786,
-        width: '100%',
-
-        '& .time': {
-            fontSize: 14,
-            marginRight: 20
-        },
-
-        '& .slider-wrapper': {
-            maxWidth: 668,
-            width: '100%'
-        }
-    },
-
-    'volume-wrapper': {
-        width: '100%',
-        maxWidth: 118,
-        display: 'flex',
-        alignItems: 'center',
-        marginLeft: 50,
-
-        '& .volume-slider-wrapper': {
-            maxWidth: 70,
-            width: '100%',
-            margin: '0 10px'
-        }
+const format = (seconds: number) => {
+    if (isNaN(seconds)) {
+        return `00:00`
     }
-})
+    const date = new Date(seconds * 1000)
+    const hh = date.getUTCHours()
+    const mm = date.getUTCMinutes()
+    const ss = date.getUTCSeconds().toString().padStart(2, '0')
+    if (hh) {
+        return `${hh}:${mm.toString().padStart(2, '0')}:${ss}`
+    }
+    return `${mm}:${ss}`
+}
 
 const AudioPlayer = () => {
-    const classes = useStyles()
+    const playerRef = useRef(null)
+    const [state, setState] = useState({
+        playing: false,
+        muted: false,
+        volume: 0.5,
+        played: 0,
+        seeking: false
+    })
+
+    const { playing, muted, volume, played, seeking } = state
+
+    const handlePlayPause = () => {
+        setState({ ...state, playing: !playing })
+    }
+
+    const handleMute = (value: boolean) => {
+        setState({ ...state, muted: value, volume: value ? 0 : 1 })
+    }
+
+    const handleRewind = () => {
+        if (playerRef.current) {
+            playerRef.current.seekTo(playerRef.current.getCurrentTime() - defaultTime)
+        }
+    }
+
+    const handleFastForward = () => {
+        if (playerRef.current) {
+            playerRef.current.seekTo(playerRef.current.getCurrentTime() + defaultTime)
+        }
+    }
+
+    const handleVolumeChange = (event: MouseEvent, newValue: number) => {
+        setState({ ...state, volume: parseFloat(newValue / 100), muted: newValue === 0 ? true : false })
+    }
+
+    const handleVolumeSeekDown = (event: MouseEvent, newValue: number) => {
+        setState({ ...state, seeking: false, volume: parseFloat(newValue / 100) })
+    }
+
+    const handleProgress = (changeState) => {
+        if (!seeking) {
+            setState({ ...state, ...changeState })
+        }
+    }
+
+    const handleSeekChange = (event: MouseEvent, newValue: number) => {
+        setState({ ...state, played: parseFloat(newValue / 100) })
+    }
+
+    const handleSeekMouseDown = (event: MouseEvent) => {
+        setState({ ...state, seeking: true })
+    }
+
+    const handleSeekMouseUp = (event: MouseEvent, newValue: number) => {
+        setState({ ...state, seeking: false })
+
+        if (playerRef.current) {
+            playerRef.current.seekTo(newValue / 100, 'fraction')
+        }
+    }
+
+    const currentTime = playerRef && playerRef.current ? playerRef.current.getCurrentTime() : '00:00'
+
+    const duration = playerRef && playerRef.current ? playerRef.current.getDuration() : '00:00:00'
+
+    const elapsedTime = format(currentTime)
+    const totalDuration = format(duration)
 
     return (
-        <div className={classes['player-wrapper']}>
+        <>
             <ReactPlayer
+                ref={playerRef}
                 url="https://slice-fun-podcasts.s3.eu-west-1.amazonaws.com/record-classix/clssx_-_rc_2021-07-09.mp3"
-                muted={true}
-                playing={true}
+                onProgress={handleProgress}
+                muted={muted}
+                playing={playing}
+                volume={volume}
                 height={0}
                 width={0}
             />
 
-            <div className={classes['controls-wrapper']}>
-                <div className={classes['info-wrapper']}>
-                    <div className="image-wrapper">
-                        <Image
-                            height={58}
-                            width={58}
-                            src="https://slice-fun-podcasts.s3.eu-west-1.amazonaws.com/record-classix/record-classix.jpeg"
-                            alt="Poster"
-                        />
-                    </div>
-
-                    <div>
-                        <div>The mounth in the 90's (September version)</div>
-                        <div className="description">Quickly Kevin, will he score; ddhfdhgfdhghdfsgl</div>
-                    </div>
-                </div>
-
-                <div className={classes.controls}>
-                    <div className="control-buttons-wrapper">
-                        <FifteenBack />
-
-                        <button className={classnames('play-pause', 'button-default')}>
-                            <PauseIcon className="play-pause-icon" />
-                        </button>
-                        <FifteenForward />
-                    </div>
-
-                    <div className={classes['duration-wrapper']}>
-                        <div className="time">31:21/01:09:14</div>
-                        <div className="slider-wrapper">
-                            <Slider trackColor={colors.white} sliderColor={colors.grey} />
-                        </div>
-                    </div>
-
-                    <div className={classes['volume-wrapper']}>
-                        <VolumeDownIcon />
-                        <div className="volume-slider-wrapper">
-                            <Slider trackColor={colors.grey} sliderColor={colors.white} />
-                        </div>
-                        <VolumeUpIcon />
-                    </div>
-                </div>
-            </div>
-        </div>
+            <PlayerControls
+                onSeek={handleSeekChange}
+                onSeekMouseDown={handleSeekMouseDown}
+                onSeekMouseUp={handleSeekMouseUp}
+                isPlaying={playing}
+                onPlayPause={handlePlayPause}
+                onRewind={handleRewind}
+                onFastForward={handleFastForward}
+                onMute={handleMute}
+                onVolumeChange={handleVolumeChange}
+                onVolumeSeekDown={handleVolumeSeekDown}
+                volume={volume}
+                played={played}
+                elapsedTime={elapsedTime}
+                totalDuration={totalDuration}
+            />
+        </>
     )
 }
 
