@@ -1,6 +1,7 @@
 // libraries
 import type { AppProps } from 'next/app'
 import { Provider } from 'react-redux'
+import { PersistGate } from 'redux-persist/integration/react'
 import { useSelector } from 'react-redux'
 import { appWithTranslation } from 'next-i18next'
 import { CacheProvider } from '@emotion/react'
@@ -15,35 +16,25 @@ import AudioPlayer from 'src/components/AudioPlayer'
 import createEmotionCache from 'src/utils/createEmotionCache'
 import theme from 'src/utils/theme'
 // store
-import { store, RootState } from 'store'
+import { store, persistor, RootState } from 'store'
 // styles
 import 'styles/globals.css'
+import App from 'src/components/App'
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache()
 
 function MyApp(props: AppProps & { emotionCache: any }) {
-    const { Component, emotionCache = clientSideEmotionCache, pageProps } = props
-
-    const { id } = store.getState().player
-    //  useSelector(({ player }: RootState) => player)
+    const { emotionCache = clientSideEmotionCache } = props
 
     return (
         <CacheProvider value={emotionCache}>
             <ThemeProvider theme={theme}>
                 <GlobalStyles />
                 <Provider store={store}>
-                    <Grid container direction="row" justifyContent="center">
-                        <Grid item xs={12} sm={4} md={3} lg={2}>
-                            <SideBarContainer />
-                            <SideBarBurgerButton />
-                        </Grid>
-
-                        <Grid item sx={{ padding: 0 }} xs={12} sm={8} md={9} lg={10}>
-                            <Component {...pageProps} />
-                            {id && <AudioPlayer />}
-                        </Grid>
-                    </Grid>
+                    <PersistGate loading={null} persistor={persistor}>
+                        <App {...props} />
+                    </PersistGate>
                 </Provider>
             </ThemeProvider>
         </CacheProvider>

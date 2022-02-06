@@ -2,6 +2,7 @@
 import { styled } from '@mui/system'
 import { useTranslation } from 'next-i18next'
 import Image from 'next/image'
+import { FacebookShareButton, FacebookIcon } from 'next-share'
 // components
 import Button from 'src/components/shared/Button'
 import Verified from 'src/components/shared/Verified'
@@ -36,6 +37,14 @@ const Info = ({ imageSrc, title, verified }: InfoProps) => {
 
                 <div>
                     <Verified verified={verified} />
+
+                    <FacebookShareButton
+                        url={'https://b193-2a02-a310-823a-5680-115f-2aac-2f72-81c9.ngrok.io/shows/3'}
+                        quote={'lalala'}
+                        hashtag={'#nextshare'}
+                    >
+                        <FacebookIcon size={32} round />
+                    </FacebookShareButton>
 
                     <div className="primary-text">{title}</div>
                     <Button

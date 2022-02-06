@@ -1,51 +1,57 @@
+// libraries
+import { makeStyles } from '@mui/styles'
 import { styled } from '@mui/system'
+import Slider from '@mui/material/Slider'
+// utils
 import { colors } from 'src/utils/theme'
 
 type ProgressBarProps = {
     beforeWidth: number
 }
 
-export const Wrapper = styled('div')({
-    color: `${colors.white}`,
-    bottom: 0,
-    boxSizing: 'border-box',
-    padding: '5px 20px',
-    position: 'fixed',
-    maxWidth: 1000,
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'flex-start',
-    boxSizing: 'border-box'
-})
+export const styles = {
+    root: {
+        color: `${colors.white}`,
+        bottom: 0,
+        boxSizing: 'border-box',
+        padding: '5px 20px',
+        position: 'fixed',
+        maxWidth: 1000,
+        width: '100%',
+        display: 'flex',
+        justifyContent: 'flex-start',
+        boxSizing: 'border-box'
+    },
 
-export const AudioInfo = styled('div')({
-    background: `${colors.opacityGray}`,
-    borderRadius: 15,
-    padding: '0 5px',
-    display: 'flex',
-    alignItems: 'center',
-    marginRight: 20,
-    overflow: 'hidden',
+    'audio-info': {
+        background: `${colors.opacityGray}`,
+        borderRadius: 15,
+        padding: '0 5px',
+        display: 'flex',
+        alignItems: 'center',
+        marginRight: 20,
+        overflow: 'hidden'
+    },
 
-    '.text': {
+    text: {
         fontSize: 12,
         margin: 0
     },
 
-    '.title': {
+    title: {
         fontWeight: 'bold'
-    }
-})
+    },
 
-export const AudioPlayerWrapper = styled('div')({
-    alignItems: 'center',
-    background: `${colors.opacityGray}`,
-    display: 'flex',
-    maxHeight: 40,
-    borderRadius: 15,
-    padding: '0 5px',
+    'audio-player-wrapper': {
+        alignItems: 'center',
+        background: `${colors.opacityGray}`,
+        display: 'flex',
+        maxHeight: 40,
+        borderRadius: 15,
+        padding: '0 5px'
+    },
 
-    '.forwardBackward': {
+    forwardBackward: {
         background: 'none',
         color: `${colors.white}`,
         border: 'none',
@@ -66,7 +72,7 @@ export const AudioPlayerWrapper = styled('div')({
         }
     },
 
-    '.playPause': {
+    playPause: {
         background: `${colors.pink}`,
         border: 'none',
         borderRadius: '50%',
@@ -84,60 +90,95 @@ export const AudioPlayerWrapper = styled('div')({
         }
     },
 
-    '[.currentTime] [.duration]': {
+    '[currentTime] [duration]': {
         fontFamily: 'monospace',
         fontSize: 12
     },
 
-    '.currentTime': {
+    currentTime: {
         marginLeft: 20,
         marginRight: 5
     },
 
-    '.duration': {
+    duration: {
         marginLeft: 5
-    }
-})
-
-export const ProgressBar = styled('input')({
-    appearance: 'none',
-    background: `${colors.lightPeach}`,
-    borderRadius: 10,
-    position: 'relative',
-    height: 11,
-    outline: 'none',
-    marginRight: 6,
-    marginLeft: 6,
-
-    '&::before': {
-        content: "''",
-        height: 11,
-        borderTopLeftRadius: 5,
-        borderBottomLeftRadius: 5,
-        width: `${(props) => `${props.beforeWidth}%` || 0}`,
-        backgroundColor: `${colors.opacityGray}`,
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        zIndex: 2,
-        cursor: 'pointer'
     },
 
-    '&::-webkit-slider-thumb': {
-        ' -webkit-appearance': 'none',
-        height: 15,
-        width: 15,
-        borderRadius: '50%',
-        border: 'none',
-        backgroundColor: `${() => colors.pink}`,
-        cursor: 'pointer',
+    'progress-bar': {
+        appearance: 'none',
+        background: colors.lightPeach,
+        borderRadius: 10,
         position: 'relative',
-        zIndex: 3,
-        boxSizing: 'border-box'
-    },
+        height: 11,
+        outline: 'none',
+        marginRight: 6,
+        marginLeft: 6,
 
-    '&:active::-webkit-slider-thumb': {
-        transform: 'scale(1.2)',
-        background: `${() => colors.pink}`
+        '&::before': {
+            content: "''",
+            height: 11,
+            borderTopLeftRadius: 5,
+            borderBottomLeftRadius: 5,
+            width: `${() => {
+                console.log('props', props)
+                return `${props.beforeWidth}%` || 0
+            }}`,
+            backgroundColor: `${colors.opacityGray}`,
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            zIndex: 2,
+            cursor: 'pointer'
+        }
     }
-})
+}
+
+// export const ProgressBar = styled(Slider)((props) => ({
+//     height: 11,
+//     background: `${colors.lightPeach}`,
+//     padding: 0,
+//     width: props.beforeWidth
+// }))
+
+// ({
+//     appearance: 'none',
+//     background: `${colors.lightPeach}`,
+//     borderRadius: 10,
+//     position: 'relative',
+//     height: 11,
+//     outline: 'none',
+//     marginRight: 6,
+//     marginLeft: 6,
+
+//     '&::before': {
+//         content: "''",
+//         height: 11,
+//         borderTopLeftRadius: 5,
+//         borderBottomLeftRadius: 5,
+//         width: `${(props) => `${props.beforeWidth}%` || 0}`,
+//         backgroundColor: `${colors.opacityGray}`,
+//         position: 'absolute',
+//         top: 0,
+//         left: 0,
+//         zIndex: 2,
+//         cursor: 'pointer'
+//     },
+
+//     '&::-webkit-slider-thumb': {
+//         ' -webkit-appearance': 'none',
+//         height: 15,
+//         width: 15,
+//         borderRadius: '50%',
+//         border: 'none',
+//         backgroundColor: `${() => colors.pink}`,
+//         cursor: 'pointer',
+//         position: 'relative',
+//         zIndex: 3,
+//         boxSizing: 'border-box'
+//     },
+
+//     '&:active::-webkit-slider-thumb': {
+//         transform: 'scale(1.2)',
+//         background: `${() => colors.pink}`
+//     }
+// })
